@@ -27,6 +27,7 @@ function divide(firstNum, secondNum) {
     return firstNum / secondNum;
 };
 
+// takes values as arguments and performs the operation
 function calculate(firstNum, operator, secondNum) {
     let operation;
 
@@ -54,9 +55,16 @@ function calculate(firstNum, operator, secondNum) {
 };
 
 function updateDisplay() {
-    display.textContent = displayNumber;
+    if (displayNumber === 0 && firstNum !== null) {
+        display.textContent = firstNum;
+    } else if (secondNum !== null) {
+        display.textContent = total;
+    } else {
+        display.textContent = displayNumber;
+    };
 };
 
+// stores clicked numbers into variables
 function getValues() {
     if (firstNum === null) {
         firstNum = displayNumber;
@@ -71,6 +79,7 @@ function getValues() {
     updateDisplay();
 };
 
+// changes-updates display based on which numbers are clicked
 numberButtons.forEach(button => {
     button.addEventListener('click', (e) => {
         if (displayNumber === 0) {
@@ -83,6 +92,7 @@ numberButtons.forEach(button => {
     });
 });
 
+// tracks which operator has been clicked
 operatorButtons.forEach(button => {
     button.addEventListener('click', (e) => {
         if (firstNum === null) {
@@ -99,12 +109,12 @@ operatorButtons.forEach(button => {
             case 'divide':
                 getValues();
                 total = calculate(firstNum, operator, secondNum);
-                console.log('total: ' + total);
+                // console.log('total: ' + total);
                 break;
             case 'equal':
                 getValues();
                 total = calculate(firstNum, prevOperator, secondNum);
-                console.log('total: ' + total);
+                // console.log('total: ' + total);
                 break;
         };
         updateDisplay();
