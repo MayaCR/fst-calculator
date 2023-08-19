@@ -1,17 +1,22 @@
 const display = document.querySelector('.numbers');
-const buttons = document.querySelectorAll('.button');
+const numberButtons = document.querySelectorAll('.number');
+const operatorButtons = document.querySelectorAll('.operator');
+const deleteButton = document.querySelector('#delete');
+const clearButton = document.querySelector('#clear');
 
 let firstNum = null; 
 let secondNum = null; 
+let prevOperator = null;
 let operator = null;
-let displayNumber = '';
+let displayNumber = 0;
+let total = 0;
 
 function addition(firstNum, secondNum) {
-    return firstNum + secondNum;
+    return Number(firstNum) + Number(secondNum);
 };
 
 function subtraction(firstNum, secondNum) {
-    return firstNum - secondNum;
+    return Number(firstNum) - Number(secondNum);
 };
 
 function multiply(firstNum, secondNum) {
@@ -23,70 +28,95 @@ function divide(firstNum, secondNum) {
 };
 
 function calculate(firstNum, operator, secondNum) {
-    let solution;
+    let operation;
 
     switch (operator) {
         case 'add':
-            solution = addition(firstNum, secondNum);
+            operation = addition(firstNum, secondNum);
             break;
         case 'subtract':
-            solution = subtraction(firstNum, secondNum);
+            operation = subtraction(firstNum, secondNum);
             break;
         case 'multiply':
-            solution = multiply(firstNum, secondNum);
+            operation = multiply(firstNum, secondNum);
             break;
         case 'divide':
-            solution = divide(firstNum, secondNum);
+            if (secondNum === 0) {
+                operation = 'Enter second value';
+            } else {
+                operation = divide(firstNum, secondNum);
+            };
             break;
         default: 
-            'Error'
+            operation = 'Error';
     }; 
-    return solution = displayNumber;
+    return operation;
 };
 
 function updateDisplay() {
     display.textContent = displayNumber;
-}
+};
 
 function getValues() {
     if (firstNum === null) {
         firstNum = displayNumber;
-        displayNumber = '';
-    } else if (firstNum !== null) {
+        displayNumber = 0;
+    } else if (operator !== null) {
         secondNum = displayNumber;
-        updateDisplay();
     };
+
+    console.log(`firstNum: ${firstNum}`)
+    console.log(`secondNum: ${secondNum}`)
+    console.log(`operator: ${operator}`)
+    updateDisplay();
 };
 
-buttons.forEach(button => {
+numberButtons.forEach(button => {
     button.addEventListener('click', (e) => {
-        displayNumber += e.target.value;
+        if (displayNumber === 0) {
+            displayNumber = e.target.value;
+        } else {
+            displayNumber += e.target.value;
+        }
+
         updateDisplay();
-        
-        operator = e.target.id;
-        
-        let solution;
-        
+    });
+});
+
+operatorButtons.forEach(button => {
+    button.addEventListener('click', (e) => {
+        if (firstNum === null) {
+            operator = e.target.id;
+        } else if (firstNum !== null && operator === null) {
+            prevOperator = operator;
+            console.log(prevOperator);
+        };
+
         switch(operator) {
             case 'add':
-                getValues()
-                console.log('firstNum: ' + firstNum);
-                console.log(operator)
-                console.log('secondNum: ' + secondNum);
-                solution = calculate(firstNum, operator, secondNum);
-                console.log(solution)
+            case 'subtract':
+            case 'multiply':
+            case 'divide':
+                getValues();
+                total = calculate(firstNum, operator, secondNum);
+                console.log('total: ' + total);
                 break;
             case 'equal':
-                solution = calculate(firstNum, operator, secondNum);
-                console.log(solution);
-                break;
-            case 'clear':
-                displayNumber = '';
-                firstNum = null;
-                secondNum = null;
-                operator = null;
-                updateDisplay();
+                getValues();
+                total = calculate(firstNum, prevOperator, secondNum);
+                console.log('total: ' + total);
                 break;
         };
+        updateDisplay();
     });
+});
+
+clearButton.addEventListener('click', () => {
+    firstNum = null;
+    secondNum = null;
+    prevOperator = null;
+    operator = null;
+    displayNumber = 0;
+    total = 0;
+    updateDisplay();
 });
