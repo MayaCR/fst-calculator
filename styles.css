@@ -68,6 +68,8 @@ body {
 #equal {
     grid-column: 3 / 5;
     grid-row: 5 / 5;
+    background-color: #EF6262;
+    color: white;
 }
 
 #clear {
