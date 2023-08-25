@@ -12,11 +12,11 @@ let displayNumber = 0;
 let total = 0;
 
 function addition(firstNum, secondNum) {
-    return Number(firstNum) + Number(secondNum);
+    return firstNum + secondNum;
 };
 
 function subtraction(firstNum, secondNum) {
-    return Number(firstNum) - Number(secondNum);
+    return firstNum - secondNum;
 };
 
 function multiply(firstNum, secondNum) {
@@ -43,13 +43,14 @@ function calculate(firstNum, operator, secondNum) {
             break;
         case 'divide':
             if (secondNum === 0) {
-                operation = 'Enter second value';
+                operation = 'Invalid';
             } else {
                 operation = divide(firstNum, secondNum);
             };
             break;
         default: 
             operation = 'Error';
+            break;
     }; 
     return operation;
 };
@@ -67,39 +68,38 @@ function updateDisplay() {
 // stores clicked numbers into variables
 function getValues() {
     if (firstNum === null) {
-        firstNum = displayNumber;
+        firstNum = Number(displayNumber);
         displayNumber = 0;
-    } else if (operator !== null) {
-        secondNum = displayNumber;
+    } else if (firstNum !== null) {
+        secondNum = Number(displayNumber);
     };
 
     console.log(`firstNum: ${firstNum}`)
     console.log(`secondNum: ${secondNum}`)
     console.log(`operator: ${operator}`)
-    updateDisplay();
 };
 
-// changes-updates display based on which numbers are clicked
+// changes/updates display based on which numbers are clicked
 numberButtons.forEach(button => {
     button.addEventListener('click', (e) => {
-        if (displayNumber === 0) {
-            displayNumber = e.target.value;
-        } else {
-            displayNumber += e.target.value;
-        }
+        let number = e.target.value;
 
+        if (displayNumber === 0) {
+            displayNumber = number;
+        } else {
+            displayNumber += number;
+        };
         updateDisplay();
     });
 });
 
-// tracks which operator has been clicked
+// tracks which operator has been clicked & performs calculation
 operatorButtons.forEach(button => {
     button.addEventListener('click', (e) => {
         if (firstNum === null) {
             operator = e.target.id;
         } else if (firstNum !== null && operator === null) {
             prevOperator = operator;
-            console.log(prevOperator);
         };
 
         switch(operator) {
@@ -109,12 +109,11 @@ operatorButtons.forEach(button => {
             case 'divide':
                 getValues();
                 total = calculate(firstNum, operator, secondNum);
-                // console.log('total: ' + total);
+                console.log(`total: ${total}`)
                 break;
             case 'equal':
                 getValues();
                 total = calculate(firstNum, prevOperator, secondNum);
-                // console.log('total: ' + total);
                 break;
         };
         updateDisplay();
